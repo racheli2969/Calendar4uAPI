@@ -1,0 +1,26 @@
+# Dockerfile for Node.js API server
+#version: '3.8'
+services:
+  mongo:
+    image: mongo:6
+    container_name: calendar-app-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  api:
+    build: .
+    container_name: calendar-app-api
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/calendar-app
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    restart: always
+
+volumes:
+  mongo-data:
